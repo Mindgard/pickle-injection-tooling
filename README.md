@@ -6,10 +6,12 @@ Some light tooling that can add arbitrary code to pickle files and then trick py
 - source the venv
 - `make install-reqs`
 - `make train-model`
-- `make attack-demo`
-
-If you are on a MacOS machine with Minecraft installed, this will open the launcher.
+- `demo-location`: get location & ip info
+- `demo-helloworld`; basic hello world example
+- `demo-minecraft`: opens minecraft if installed on your system
+- `demo-neofetch`: get system information if neofetch is installed on your system
 
 ### TODO
-- injections not breaking the rest of execution
-- more examples than minecraft launcher
+
+- injections not breaking the model execution
+- fix the zipped model example
