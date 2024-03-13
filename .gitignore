@@ -1,3 +1,5 @@
 venv
 *.pt
-mnist_cnn_zipped.pt_unzipped
+*.altered
+__pycache__
+**.pyc

@@ -9,3 +9,7 @@ Some light tooling that can add arbitrary code to pickle files and then trick py
 - `make attack-demo`
 
 If you are on a MacOS machine with Minecraft installed, this will open the launcher.
+
+### TODO
+- injections not breaking the rest of execution
+- more examples than minecraft launcher
