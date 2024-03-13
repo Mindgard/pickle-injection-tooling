@@ -11,8 +11,18 @@ venv:
 train-model: # Will train a basic mnist model
 	python3 train_model.py --save-model --epochs 1
 
-attack-demo-pickle: # Will demonstrate the injection and execution of a pickle file using pickle
-	python3 -m pickle-injection --pickle mnist_cnn.pt --pickle-execute
-
-attack-demo-torch: # Will demonstrate the injection and execution of a pickle file using torch
+demo: train-model
 	python3 -m pickle-injection --pickle mnist_cnn.pt --torch-execute
+
+demo-minecraft: train-model
+	python3 -m pickle-injection --pickle mnist_cnn.pt --example minecraft --torch-execute
+
+demo-neofetch: train-model
+	python3 -m pickle-injection --pickle mnist_cnn.pt --example neofetch --torch-execute
+
+demo-helloworld: train-model
+	python3 -m pickle-injection --pickle mnist_cnn.pt --example location --torch-execute
+
+clean:
+	rm *.pt || true
+	rm *.altered || true

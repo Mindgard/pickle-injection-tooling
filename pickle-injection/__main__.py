@@ -3,7 +3,9 @@ import argparse
 from .src.pickle_implementations import PickleImplementationFactory
 from .src.injection import inject
 
-import pickle
+from loguru import logger
+
+from .src.examples import Example, examples
 
 
 if __name__ == "__main__":
@@ -15,18 +17,13 @@ if __name__ == "__main__":
         help="Show the symbols in the pickle file",
         default=False,
     )
+    # add an enum argument
+
     parser.add_argument(
-        "--inject",
-        type=str,
-        default='import os; os.system("open /Applications/Minecraft.app")',
+        "--example", type=Example, choices=list(Example), default=Example.location
     )
     parser.add_argument(
         "--torch-execute",
-        action="store_true",
-        default=False,
-    )
-    parser.add_argument(
-        "--pickle-execute",
         action="store_true",
         default=False,
     )
@@ -39,34 +36,23 @@ if __name__ == "__main__":
     # Load the pickle file
     pickled = PickleImplementationFactory.get_pickle(args.pickle, args.show_symbols)
 
-    new_data = inject(pickled.data, args.inject)
+    new_data = None
+    if args.example:
+        new_data = inject(pickled.data, examples.get(args.example))
 
-    pickled.set_data(new_data)
+        pickled.set_data(new_data)
 
-    with open(args.pickle + ".altered", "wb") as f:
+    altered_name = args.pickle + ".altered"
+    with open(altered_name, "wb") as f:
         pickled.dump(f)
-
-    if args.pickle_execute:
-        with open(args.pickle + ".altered", "rb") as f:
-            data = pickle.loads(f.read())
 
     if args.torch_execute:
         import torch
         from train_model import Net
 
+        logger.info("executing with torch")
+
         device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
 
         loaded_model = Net().to(device)
-        loaded_model.load_state_dict(torch.load("mnist_cnn.pt"))
-
-        loaded_model = torch.load(
-            f="mnist_cnn.pt.altered",
-            map_location=device,
-            weights_only=False,
-        )
-
-    # something gather args
-    # file
-    # injection example
-    # whether to execute afterwards
-    # save output to file
+        loaded_model.load_state_dict(torch.load(altered_name))

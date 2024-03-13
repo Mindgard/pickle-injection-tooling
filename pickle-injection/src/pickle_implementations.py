@@ -75,6 +75,7 @@ class ZippedPTFile(PickleImplementation):
         # Save the rest so it can be dumped to a new file
 
     def dump(self, file_like: BinaryIO):
+        file_like.seek(0)
         zip_buffer = BytesIO()
         with ZipFile(zip_buffer, "w") as zip_file:
             for i, o in enumerate(self.files):
