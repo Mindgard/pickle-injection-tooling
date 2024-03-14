@@ -199,14 +199,8 @@ def main():
     # The output of this isn't strictly a pickle file unless you turn of zipfile serialization
     if args.save_model:
         torch.save(
-            obj=model.state_dict(),
-            f="mnist_cnn_zipped.pt",
-            _use_new_zipfile_serialization=True,
-        )
-        torch.save(
-            obj=model.state_dict(),
-            f="mnist_cnn.pt",
-            _use_new_zipfile_serialization=False,
+            model,
+            f="mnist_cnn.pt"
         )
 
 
