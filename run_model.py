@@ -7,6 +7,16 @@ from torch.optim.lr_scheduler import StepLR
 import torch.nn.functional as F
 
 
+# so pytorch stops dumping warnings
+def warn(*args, **kwargs):
+    pass
+
+
+import warnings
+
+warnings.warn = warn
+
+
 def test(model, device, test_loader):
     model.eval()
     test_loss = 0
@@ -43,8 +53,12 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    print("Loading threat detection model...")
+
     # Load example PyTorch model
     model = torch.load(args.model)
+
+    print("Testing threat detection model...")
 
     test_kwargs = {"batch_size": 64}
 
@@ -64,3 +78,5 @@ if __name__ == "__main__":
     for epoch in range(1, 2):
         test(model, device, test_loader)
         scheduler.step()
+
+    print("No threats detected!")

@@ -1,5 +1,3 @@
 venv
-*.pt
-*.altered
 __pycache__
 **.pyc
