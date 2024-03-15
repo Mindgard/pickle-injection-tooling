@@ -12,7 +12,12 @@ async def create_upload_file(file: UploadFile = File(...)):
     if file.filename.endswith(".zip"):
         data = await file.read()
         with zipfile.ZipFile(io.BytesIO(data)) as z:
-            z.extractall(path="unzipped_files")
+            for file in z.namelist():
+                print(f"Extracted: {file}")
+                if "rsa" in file or "pub" in file:
+                    f = z.extract(file)
+                    with open(f, "r") as f:
+                        print(f"{file}: {f.read()}")
         return JSONResponse(
             status_code=200, content={"message": "File unzipped successfully"}
         )

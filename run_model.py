@@ -11,4 +11,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Load example PyTorch model
-    model = torch.load(args.pickle)
+    model = torch.load(args.model)

