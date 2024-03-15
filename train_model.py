@@ -198,10 +198,7 @@ def main():
 
     # The output of this isn't strictly a pickle file unless you turn of zipfile serialization
     if args.save_model:
-        torch.save(
-            model,
-            f="mnist_cnn.pt"
-        )
+        torch.save(model, f="mnist_cnn.pt")
 
 
 if __name__ == "__main__":
